@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ระบบรดน้ำต้นไม้อัจฉริยะ</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <style>
+        body   { font-family: 'Kanit', sans-serif;
+    }
+
+.navbar {
+    background-color: #006600 !important; /* เปลี่ยนสีพื้นหลังเป็นสีเขียว */
+    padding: 8px 0; /* ปรับระยะห่างด้านบนและด้านล่างของ Navbar */
+}
+
+
+    /* ปรับแต่งสีของข้อความใน Navbar */
+    .navbar-brand h3 {
+        color: #fff; /* สีข้อความเป็นสีขาว */
+        font-weight: bold; /* ตัวหนา */
+    }
+
+    /* ปรับแต่งสีของลิงก์ใน Navbar */
+    .navbar-light .navbar-nav .nav-link {
+        color: #fff; /* สีข้อความลิงก์เป็นสีขาว */
+    }
+
+    /* เมื่อนำเมาส์ไปวางบนลิงก์ */
+    .navbar-light .navbar-nav .nav-link:hover {
+        color: #fff; /* สีข้อความเมื่อนำเมาส์ไปวางบนลิงก์เป็นสีขาว */
+        background-color: #003300
+        ; /* เปลี่ยนสีพื้นหลังเป็นสีเขียวเข้ม */
+    }
+
+    .navbar {
+        width: 100%;
+      }
+      
+      .navbar-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80px; /* Adjust as needed */
+      }
+      
+      .navbar-brand {
+        display: flex;
+        align-items: center; /* This will vertically center the icon with the text */
+        gap: 10px; /* Adjust the space between the icon and the text */
+      }
+      
+      .navbar-brand img {
+        height: 50px; /* Adjust as needed */
+      }
+      
+      .display-5 {
+        margin: 0;
+      }
+      
+
+    </style>
+        
+</head>
+
+  <body>
+    <nav class="navbar">
+        <div class="navbar-container">
+          <a class="navbar-brand">
+            <img src="   https://cdn-icons-png.flaticon.com/512/2792/2792706.png " alt="Icon" style="height:50px;"> <!-- Adjust height as needed -->
+            <h3 class="display-5">ระบบรดน้ำต้นไม้อัจฉริยะ</h3>
+          </a>
+        </div>
+      </nav>
+      
+    
+      
+    <div class="container">
+    <div class="row">
+
+
+
+
+
+
+
+        <div class="col text-center">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <h4 class="display-4">ปุ่มควบคุมไฟ LED</h4>
+              <button id="btnOn" class="btn btn-success" onclick="ledOn()">
+                <i class="bi bi-brightness-high-fill"></i> เปิดไฟ LED
+              </button>
+              <button id="btnOff" class="btn btn-danger"  onclick="ledOff()">
+                <i class="bi bi-brightness-high"></i> ปิดไฟ LED
+              </button>
+            </div>
+          </div>
+          
+          </div>
+          
+          </div>
+          
+          
+        
+          <div class="d-flex justify-content-center flex-wrap">
+            <div class="card text-center m-2" style="width: 18rem;">
+              <img src="https://cdn-icons-png.flaticon.com/512/1684/1684375.png" class="card-img-top" alt="Temperature Image" style="width: 30%; margin: 10px auto;">
+              <div class="card-body">
+                <h5 class="card-title fs-4">Temperature</h5>
+                <p class="card-text"><span id="lastTemp" class="badge bg-primary">Loading...</span>°C</p>
+              </div>
+            </div>
+          
+            <div class="card text-center m-2" style="width: 18rem;">
+              <img src="https://cdn-icons-png.flaticon.com/512/4005/4005754.png" class="card-img-top" alt="Humidity Image" style="width: 30%; margin: 10px auto;">
+              <div class="card-body">
+                <h5 class="card-title fs-4">Humidity</h5>
+                <p class="card-text"><span id="lastHum" class="badge bg-secondary">Loading...</span>%</p>
+              </div>
+            </div>
+          
+            <div class="card text-center m-2" style="width: 18rem;">
+              <img src="https://cdn-icons-png.flaticon.com/512/6634/6634686.png" class="card-img-top" alt="Soil Moisture Image" style="width: 30%; margin: 10px auto;">
+              <div class="card-body">
+                <h5 class="card-title fs-4">Soil Moisture</h5>
+                <p class="card-text"><span id="lastsoil" class="badge bg-info">Loading...</span></p>
+              </div>
+            </div>
+        </div>
+          </div>
+          
+     
+      </div>
+      
+
+      <div class="container mt-4">
+        <div class="row justify-content-center">
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <canvas id="myChart1" width="500" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+      
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <canvas id="myChart2" width="500" height="250"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col mt-3"> 
+              <div class="card">
+                <div class="card-body">
+                  <canvas id="myChart3" width="500" height="250"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+      
+
+
+
+
+
+
+
+    <footer class="text-center mt-5">
+        <p>Copyright 2023 | สว.บอล , หลวงโอม , บ่าวมิน</p>
+      </footer>
+      
+</body>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.2.2/mqtt.min.js"
+      integrity="sha512-I8gBERqrEkyDqbjHj3aymzBVIPFs85vGSzy26+1P5weHzFp8vfJ8dARJz51n3oQ80DTdYn8MbhUiz5UAW2rMxw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.0/dist/chart.min.js"></script>
+  
+
+  <script>
+    var tempLabel = [];
+    var tempData = [];
+    var tempChart;
+
+    var humiLabel = [];
+    var humiData = [];
+    var humiChart;
+
+    var soilLabel = [];
+    var soilData = [];
+    var soilChart;
+
+    let get_last = () => {
+      let url = "http://10.1.1.145:5000/nodemcu/last";
+      fetch(url)
+        .then((response) => response.json())
+        .then((json) => {
+          let id = json[0].id;
+          let message = json[0].message;
+          let sensor = $.parseJSON(message);
+
+          $("#lastHum").text(sensor.humidity.toFixed(1));
+          $("#lastTemp").text(sensor.temperature.toFixed(2));
+          $("#lastsoil").text(sensor.soilMoisture.toFixed(3));
+        });
+    };
+
+    let showTempChart = () => {
+      tempChart = new Chart($("#myChart1"), {
+        type: "line",
+        data: {
+          labels: tempLabel,
+          datasets: [
+            {
+              label: "Temperature",
+              data: tempData,
+              borderColor: "rgba(0, 42, 100)",
+              borderWidth: 2,
+            },
+          ],
+        },
+      });
+    };
+
+    let showTemp = () => {
+      let url = "http://10.1.1.145:5000/nodemcu/last";
+      fetch(url)
+        .then((response) => response.json())
+        .then((json) => {
+          json.forEach((entry) => {
+            let message = JSON.parse(entry.message);
+            tempLabel.push(entry.id);
+            tempData.push(message.temperature.toFixed(1));
+          });
+          tempChart.data.labels = tempLabel.slice(-20);
+          tempChart.data.datasets[0].data = tempData.slice(-20);
+          tempChart.update();
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    let showHumiChart = () => {
+      humiChart = new Chart($("#myChart2"), {
+        type: "line",
+        data: {
+          labels: humiLabel,
+          datasets: [
+            {
+              label: "Humidity",
+              data: humiData,
+              borderColor: "rgba(157, 245, 255)",
+              borderWidth: 2,
+            },
+          ],
+        },
+      });
+    };
+
+    let showHumi = () => {
+      let url = "http://10.1.1.145:5000/nodemcu/last";
+      fetch(url)
+        .then((response) => response.json())
+        .then((json) => {
+          json.forEach((entry) => {
+            let message = JSON.parse(entry.message);
+            humiLabel.push(entry.id);
+            humiData.push(message.humidity.toFixed(2));
+          });
+          humiChart.data.labels = humiLabel.slice(-20);
+          humiChart.data.datasets[0].data = humiData.slice(-20);
+          humiChart.update();
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    let showsoilChart = () => {
+      soilChart = new Chart($("#myChart3"), {
+        type: "line",
+        data: {
+          labels: soilLabel,
+          datasets: [
+            {
+              label: "Soil Moisture",
+              data: soilData,
+              borderColor: "rgba(255, 0, 0, 0.5)", // สีแดงทึบ
+
+              borderWidth: 2,
+            },
+          ],
+        },
+      });
+    };
+
+    let showsoil = () => {
+      let url = "http://10.1.1.145:5000/nodemcu/last";
+      fetch(url)
+        .then((response) => response.json())
+        .then((json) => {
+          json.forEach((entry) => {
+            let message = JSON.parse(entry.message);
+            soilLabel.push(entry.id);
+            soilData.push(message.soilMoisture.toFixed(3));
+          });
+          soilChart.data.labels = soilLabel.slice(-20);
+          soilChart.data.datasets[0].data = soilData.slice(-20);
+          soilChart.update();
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    let ledOn = () => {
+      let url = "http://10.1.1.145:5000/nodemcu/led/on";
+      fetch(url)
+        .then((response) => {
+          if (response.ok) {
+            console.log("LED turned on");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    let ledOff = () => {
+      let url = "http://10.1.1.145:5000/nodemcu/led/off";
+      fetch(url)
+        .then((response) => {
+          if (response.ok) {
+            console.log("LED turned off");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    $(() => {
+      get_last();
+
+      showTempChart();
+      showHumiChart();
+      showsoilChart();
+
+      setInterval(get_last, 5000);
+      setInterval(showTemp, 5000);
+      setInterval(showHumi, 5000);
+      setInterval(showsoil, 5000);
+    });
+  </script>
+</html>
